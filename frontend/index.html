@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> CacheX Engine Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">    
+</head>
+<body>
+     
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+
+
+    <div class="container">
+
+        <h1>
+            <i class="fas fa-database"></i>
+            CacheX Engine
+        </h1>
+
+        <p class="subtitle">LRU Cache • SQLite • API Dashboard</p>
+
+    
+        <div class="main-panel">
+
+            <!-- SELECT + ACTIONS -->
+            <div class="input-box">
+                <select id="key"></select>
+                <button onclick="fetchData()">Fetch</button>
+                <button onclick="clearCache()">Clear</button>
+            </div>
+
+            <!-- ADD -->
+            <div class="input-box">
+                <input type="text" id="newValue" placeholder="Add fruit">
+                <button onclick="addData()">Add</button>
+            </div>
+
+            <!-- DELETE -->
+            <div class="input-box">
+                <button onclick="deleteItem()">Delete Selected</button>
+            </div>
+
+            <!-- UPDATE -->
+            <div class="input-box">
+                <input type="text" id="updateValue" placeholder="Update name">
+                <button onclick="updateItem()">Update Selected</button>
+            </div>
+
+        </div> 
+
+        <div class="card-container">
+            <div class="card result-card">
+                <h3>Result</h3>
+                <p id="result">---</p>
+            </div>
+
+
+            <div class="card hit-card">
+                <h3>Cache Hit Rate</h3>
+                <p id="hitRate">0%</p>
+                <div style="margin-top:10px;">
+                    <span class="badge hit">✔ Hits 0</span>
+                    <span class="badge miss">✖ Misses 0</span>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <h3>Performance Chart</h3>
+                <canvas id="chart"></canvas>
+            </div>
+        
+            <div class="loader" id="loader"></div>
+            <div class="toast" id="toast">Success</div>
+         </div>   
+    </div>
+    
+    <div class="sparkle" style="top:20%; left:30%;"></div>
+    <div class="sparkle" style="top:50%; left:70%; animation-delay:1s;"></div>
+    <div class="sparkle" style="top:80%; left:40%; animation-delay:2s;"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
