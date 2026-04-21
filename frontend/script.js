@@ -1,35 +1,41 @@
 let dataPoints = [];
+let chart; // global chart
 
-const ctx = document.getElementById('chart').getContext('2d');
-const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-gradient.addColorStop(0, "rgba(139,92,246,0.6)");
-gradient.addColorStop(1, "rgba(139,92,246,0.05)");
+// ✅ RUN AFTER PAGE LOAD
+window.onload = () => {
 
-const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Cache Hit Rate',
-            data: [],
-            borderColor: '#8b5cf6',
-            backgroundColor:  gradient,
-            tension: 0.4,
-            fill: true,
-            pointRadius: 5,
-            pointBackgroundColor: '#ffffff',
-            pointBorderColor: '#8b5cf6',
-            borderWidth: 3
-        }]
-    },
-    options: {
+    console.log("JS Loaded");
+
+    const ctx = document.getElementById('chart').getContext('2d');
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, "rgba(139,92,246,0.6)");
+    gradient.addColorStop(1, "rgba(139,92,246,0.05)");
+
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Cache Hit Rate',
+                data: [],
+                borderColor: '#8b5cf6',
+                backgroundColor: gradient,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 5,
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#8b5cf6',
+                borderWidth: 3
+            }]
+        },
+        options: {
             responsive: true,
             maintainAspectRatio: false,
             animation: {
-                    duration: 1000,
-                    easing: 'easeInOutQuart'
-                },
-
+                duration: 1000,
+                easing: 'easeInOutQuart'
+            },
             plugins: {
                 legend: {
                     labels: {
@@ -37,33 +43,23 @@ const chart = new Chart(ctx, {
                     }
                 }
             },
-
             scales: {
                 x: {
                     title: {
                         display: true,
                         text: "Number of Requests",
-                        color: "#a5b4fc",
-                        font: {
-                            size: 14,
-                            weight: "bold"
-                        }
+                        color: "#a5b4fc"
                     },
                     ticks: {
                         color: "#94a3b8"
                     }
                 },
-
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
                         text: "Cache Hit Rate (%)",
-                        color: "#a5b4fc",
-                        font: {
-                            size: 14,
-                            weight: "bold"
-                        }
+                        color: "#a5b4fc"
                     },
                     ticks: {
                         color: "#94a3b8"
@@ -71,20 +67,23 @@ const chart = new Chart(ctx, {
                 }
             }
         }
-     });
+    });
+
+    loadKeys(); // call after DOM ready
+};
+
+// ===================== FUNCTIONS =====================
 
 function updateChart(hitRate) {
     dataPoints.push(hitRate);
-
     chart.data.labels.push(dataPoints.length);
     chart.data.datasets[0].data = dataPoints;
-
-    chart.update('active');
+    chart.update();
 }
 
 async function loadKeys() {
     try {
-        let res = await fetch("http://localhost:8080/keys");
+        let res = await fetch("https://cachex-engine.onrender.com/keys");
         let data = await res.json();
 
         let dropdown = document.getElementById("key");
@@ -102,29 +101,29 @@ async function loadKeys() {
     }
 }
 
-loadKeys(); 
-
 async function fetchData() {
     showLoader();
+
     let key = document.getElementById("key").value;
 
     try {
-        let res = await fetch(`http://localhost:8080/get?key=${key}`);
+        let res = await fetch(`https://cachex-engine.onrender.com/get?key=${key}`);
         let data = await res.json();
 
-        console.log(data); 
+        console.log(data);
 
         document.getElementById("result").innerText = data.result;
         document.getElementById("hitRate").innerText =
-            data.hitRate.toFixed(2) + "%";
-            
-            document.querySelector(".hit").innerText =
-                "✔ Hits " + (data.hits ?? 0);
+            (data.hitRate || 0).toFixed(2) + "%";
 
-            document.querySelector(".miss").innerText =
-                "✖ Misses " + (data.misses ?? 0);
-           
-            updateChart(data.hitRate);
+        document.querySelector(".hit").innerText =
+            "✔ Hits " + (data.hits ?? 0);
+
+        document.querySelector(".miss").innerText =
+            "✖ Misses " + (data.misses ?? 0);
+
+        updateChart(data.hitRate);
+
     } catch (error) {
         console.log("Error:", error);
     }
@@ -136,7 +135,7 @@ async function fetchData() {
 async function clearCache() {
     showLoader();
 
-    await fetch("http://localhost:8080/clear");
+    await fetch("https://cachex-engine.onrender.com/clear");
 
     document.getElementById("result").innerText = "---";
     document.getElementById("hitRate").innerText = "0%";
@@ -147,39 +146,36 @@ async function clearCache() {
 
 async function addData() {
     showLoader();
+
     let value = document.getElementById("newValue").value;
+
     if (!value) {
-    alert("Enter value");
-    hideLoader();
-    return;
+        alert("Enter value");
+        hideLoader();
+        return;
     }
 
-    await fetch(`http://localhost:8080/add?value=${value}`);
+    await fetch(`https://cachex-engine.onrender.com/add?value=${value}`);
 
-    alert("Added!");
     document.getElementById("newValue").value = "";
 
     loadKeys();
-    
+
     hideLoader();
     showToast("Added!");
-    
 }
 
 async function deleteItem() {
     let id = document.getElementById("key").value;
 
-    if (!confirm("Are you sure you want to delete this item?")) {
-        return;
-    }
+    if (!confirm("Are you sure?")) return;
 
     showLoader();
 
-    await fetch(`http://localhost:8080/delete?id=${id}`);
+    await fetch(`https://cachex-engine.onrender.com/delete?id=${id}`);
 
-    alert(`Deleted ID ${id}`);
+    loadKeys();
 
-    loadKeys(); 
     hideLoader();
     showToast("Deleted!");
 }
@@ -196,17 +192,17 @@ async function updateItem() {
         return;
     }
 
-    await fetch(`http://localhost:8080/update?id=${id}&value=${value}`);
-
-    showToast(`Updated ID ${id}`);   
+    await fetch(`https://cachex-engine.onrender.com/update?id=${id}&value=${value}`);
 
     document.getElementById("updateValue").value = "";
 
     loadKeys();
 
     hideLoader();
+    showToast("Updated!");
 }
- 
+
+// ===================== UI =====================
 
 function showLoader() {
     document.getElementById("loader").style.display = "block";
@@ -226,6 +222,8 @@ function showToast(msg) {
     }, 2000);
 }
 
+// ===================== CHART EFFECT =====================
+
 const glowPlugin = {
     id: 'glow',
     beforeDraw: (chart) => {
@@ -233,8 +231,6 @@ const glowPlugin = {
         ctx.save();
         ctx.shadowColor = "rgba(139,92,246,0.6)";
         ctx.shadowBlur = 15;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
     },
     afterDraw: (chart) => {
         chart.ctx.restore();
