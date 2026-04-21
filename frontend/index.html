@@ -12,73 +12,139 @@
     <div class="orb orb2"></div>
 
 
-    <div class="container">
+    <div class="dashboard">
 
-        <h1>
-            <i class="fas fa-database"></i>
-            CacheX Engine
-        </h1>
+        <!-- LEFT SIDE -->
+        <div class="left-panel">
 
-        <p class="subtitle">LRU Cache • SQLite • API Dashboard</p>
+            <h1>
+                <i class="fas fa-database"></i>
+                CacheX Engine
+            </h1>
 
-    
-        <div class="main-panel">
+            <p class="subtitle">LRU Cache • SQLite • API Dashboard</p>
 
-            <!-- SELECT + ACTIONS -->
-            <div class="input-box">
-                <select id="key"></select>
-                <button onclick="fetchData()">Fetch</button>
-                <button onclick="clearCache()">Clear</button>
-            </div>
+            <div class="main-panel">
 
-            <!-- ADD -->
-            <div class="input-box">
-                <input type="text" id="newValue" placeholder="Add fruit">
-                <button onclick="addData()">Add</button>
-            </div>
-
-            <!-- DELETE -->
-            <div class="input-box">
-                <button onclick="deleteItem()">Delete Selected</button>
-            </div>
-
-            <!-- UPDATE -->
-            <div class="input-box">
-                <input type="text" id="updateValue" placeholder="Update name">
-                <button onclick="updateItem()">Update Selected</button>
-            </div>
-
-        </div> 
-
-        <div class="card-container">
-            <div class="card result-card">
-                <h3>Result</h3>
-                <p id="result">---</p>
-            </div>
-
-
-            <div class="card hit-card">
-                <h3>Cache Hit Rate</h3>
-                <p id="hitRate">0%</p>
-                <div style="margin-top:10px;">
-                    <span class="badge hit">✔ Hits 0</span>
-                    <span class="badge miss">✖ Misses 0</span>
+                <div class="input-box">
+                    <select id="key"></select>
+                    <button onclick="fetchData()">Fetch</button>
+                    <button onclick="clearCache()">Clear</button>
                 </div>
+
+                <div class="input-box">
+                    <input type="text" id="newValue" placeholder="Add fruit">
+                    <button onclick="addData()">Add</button>
+                </div>
+
+                <div class="input-box">
+                    <button onclick="deleteItem()">Delete Selected</button>
+                </div>
+
+                <div class="input-box">
+                    <input type="text" id="updateValue" placeholder="Update name">
+                    <button onclick="updateItem()">Update Selected</button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="right-panel">
+
+            <div class="top-cards">
+
+                <div class="card result-card">
+                    <h3>Result</h3>
+                    <p id="result">---</p>
+                </div>
+
+                <div class="card hit-card">
+                    <h3>Cache Hit Rate</h3>
+                    <p id="hitRate">0%</p>
+                    <div class="badge-row">
+                        <span class="badge hit">✔ Hits 0</span>
+                        <span class="badge miss">✖ Misses 0</span>
+                    </div>
+                </div>
+
             </div>
 
             <div class="card chart-card">
                 <h3>Performance Chart</h3>
                 <canvas id="chart"></canvas>
+
+                <p class="chart-label">
+                    Line Graph showing cache performance over time
+                </p>
             </div>
-        
+
             <div class="loader" id="loader"></div>
             <div class="toast" id="toast">Success</div>
-         </div>   
+
+        </div>
+
     </div>
-    
-    <div class="sparkle" style="top:20%; left:30%;"></div>
-    <div class="sparkle" style="top:50%; left:70%; animation-delay:1s;"></div>
-    <div class="sparkle" style="top:80%; left:40%; animation-delay:2s;"></div>
+       
+        <div class="footer">
+
+            <div class="footer-grid">
+
+                <div class="footer-card">
+                    <i class="fas fa-bullseye"></i>
+                    <h4>Objective</h4>
+                    <p>
+                       This project demonstrates how caching improves system performance by reducing database access time.
+
+                       It implements an LRU (Least Recently Used) Cache in C++ integrated with SQLite, and provides a dashboard to visualize cache efficiency using metrics like hit rate, misses, and response trends.
+
+                       The goal is to show how real-world systems optimize speed and scalability using caching techniques.
+                    </p>
+                </div>
+
+                <div class="footer-card">
+                    <i class="fas fa-sliders-h"></i>
+                    <h4>Usage</h4>
+                    <p>
+                        Select a key from the dropdown and click Fetch to retrieve data from cache/database.
+                        Add new items using the input field, update or delete selected entries, and observe
+                        cache performance through hit rate and real-time chart updates.
+                    </p>
+                </div>
+
+            <div class="footer-card">
+                    <i class="fas fa-layer-group"></i>
+                    <h4>Highlights</h4>
+                    <p>
+                        • LRU Cache implementation in C++ <br>
+                        • SQLite database integration <br>
+                        • Real-time cache hit/miss tracking <br>
+                        • Interactive performance visualization <br>
+                        • REST API-based communication
+                    </p>
+                </div>
+            </div>
+            <div class="tech-stack">
+                <h3>Technologies Used</h3>
+
+                <div class="icons">
+                    <span><i class="fab fa-html5"></i> HTML</span>
+                    <span><i class="fab fa-css3-alt"></i> CSS</span>
+                    <span><i class="fab fa-js"></i> JavaScript</span>
+                    <span><i class="fas fa-chart-line"></i> Chart.js</span>
+                    <span><i class="fas fa-database"></i> SQLite</span>
+                    <span><i class="fas fa-microchip"></i> C++</span>
+                </div>
+            </div>
+
+            <div class="copyright">
+                © 2026 CacheX Engine • Built by Parth 
+            </div>
+
+        </div>
+        
     
     <script src="script.js"></script>
 </body>

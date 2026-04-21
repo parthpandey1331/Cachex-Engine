@@ -1,6 +1,9 @@
 let dataPoints = [];
 
 const ctx = document.getElementById('chart').getContext('2d');
+const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+gradient.addColorStop(0, "rgba(139,92,246,0.6)");
+gradient.addColorStop(1, "rgba(139,92,246,0.05)");
 
 const chart = new Chart(ctx, {
     type: 'line',
@@ -9,31 +12,66 @@ const chart = new Chart(ctx, {
         datasets: [{
             label: 'Cache Hit Rate',
             data: [],
-            borderColor: '#6366f1',
-            backgroundColor: 'rgba(99,102,241,0.2)',
+            borderColor: '#8b5cf6',
+            backgroundColor:  gradient,
             tension: 0.4,
             fill: true,
-            pointRadius: 5
+            pointRadius: 5,
+            pointBackgroundColor: '#ffffff',
+            pointBorderColor: '#8b5cf6',
+            borderWidth: 3
         }]
     },
     options: {
-        plugins: {
-            legend: {
-                labels: {
-                    color: "#475569"
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
+                },
+
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#cbd5f5"
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "Number of Requests",
+                        color: "#a5b4fc",
+                        font: {
+                            size: 14,
+                            weight: "bold"
+                        }
+                    },
+                    ticks: {
+                        color: "#94a3b8"
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "Cache Hit Rate (%)",
+                        color: "#a5b4fc",
+                        font: {
+                            size: 14,
+                            weight: "bold"
+                        }
+                    },
+                    ticks: {
+                        color: "#94a3b8"
+                    }
                 }
             }
-        },
-        scales: {
-            x: {
-                ticks: { color: "#64748b" }
-            },
-            y: {
-                ticks: { color: "#64748b" }
-            }
         }
-    }
-});
+     });
 
 function updateChart(hitRate) {
     dataPoints.push(hitRate);
@@ -41,22 +79,27 @@ function updateChart(hitRate) {
     chart.data.labels.push(dataPoints.length);
     chart.data.datasets[0].data = dataPoints;
 
-    chart.update();
+    chart.update('active');
 }
 
 async function loadKeys() {
-    let res = await fetch("http://localhost:8080/keys");
-    let data = await res.json();
+    try {
+        let res = await fetch("http://localhost:8080/keys");
+        let data = await res.json();
 
-    let dropdown = document.getElementById("key");
-    dropdown.innerHTML = "";
+        let dropdown = document.getElementById("key");
+        dropdown.innerHTML = "";
 
-    data.forEach(item => {
-        let option = document.createElement("option");
-        option.value = item.id;
-        option.text = item.id + " - " + item.value;
-        dropdown.appendChild(option);
-    });
+        data.forEach(item => {
+            let option = document.createElement("option");
+            option.value = item.id;
+            option.text = item.id + " - " + item.value;
+            dropdown.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Error loading keys:", error);
+    }
 }
 
 loadKeys(); 
@@ -69,7 +112,7 @@ async function fetchData() {
         let res = await fetch(`http://localhost:8080/get?key=${key}`);
         let data = await res.json();
 
-        console.log(data); // ✅ DEBUG
+        console.log(data); 
 
         document.getElementById("result").innerText = data.result;
         document.getElementById("hitRate").innerText =
@@ -182,3 +225,20 @@ function showToast(msg) {
         toast.classList.remove("show");
     }, 2000);
 }
+
+const glowPlugin = {
+    id: 'glow',
+    beforeDraw: (chart) => {
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.shadowColor = "rgba(139,92,246,0.6)";
+        ctx.shadowBlur = 15;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+    },
+    afterDraw: (chart) => {
+        chart.ctx.restore();
+    }
+};
+
+Chart.register(glowPlugin);
