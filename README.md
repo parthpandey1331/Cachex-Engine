@@ -12,10 +12,18 @@ CacheX Engine demonstrates how caching improves performance by reducing latency 
 
 ---
 
+## Why This Project Matters
+
+Traditional database systems repeatedly fetch the same data from disk, increasing response time and server load. This project demonstrates how an LRU (Least Recently Used) caching mechanism can reduce database access frequency and improve retrieval performance.
+
+The system dynamically tracks cache hits and misses while visualizing cache efficiency in real time through an interactive dashboard.
+
+---
+
 ## Live Demo
 
 Frontend (User Interface):  
-https://cachex-engine1307.netlify.app/
+https://cachex-engine008.netlify.app/
 
 Backend API:  
 https://cachex-engine.onrender.com  
@@ -100,11 +108,14 @@ smart-memory-cache-system/
 
 ## Screenshots
 
-Add screenshots of the UI here for better visualization:
+### Main Dashboard
+![Dashboard](./screenshots/dashboard.png)
 
-![Dashboard](./frontend/screenshot1.png)
-![Cache Visualization](./frontend/screenshot2.png)
+### Data Fetch & Cache Response
+![Fetch Result](./screenshots/fetch-result.png)
 
+### Cache Hit Visualization
+![Cache Hit](./screenshots/cache-hit.png)
 ---
 
 ## Testing the Application
@@ -132,5 +143,5 @@ Add screenshots of the UI here for better visualization:
 
 ## Author
 Parth Pandey 
-B.Tech Computer Science Engineering
-2nd year
+B.Tech in Computer Science Engineering
+Focused on backend systems, performance optimization, and full-stack development.
