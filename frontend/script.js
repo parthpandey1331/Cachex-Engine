@@ -105,7 +105,7 @@ async function fetchData() {
     showLoader();
 
     let key = document.getElementById("key").value;
-
+    
     try {
         let res = await fetch(`https://cachex-engine.onrender.com/get?key=${key}`);
         let data = await res.json();
@@ -122,7 +122,7 @@ async function fetchData() {
         document.querySelector(".miss").innerText =
             "✖ Misses " + (data.misses ?? 0);
 
-        updateChart(data.hitRate);
+        updateChart(Number(data.hitRate || 0));
 
     } catch (error) {
         console.log("Error:", error);
